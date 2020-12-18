@@ -2,12 +2,12 @@ import 'package:sqflite/sqflite.dart';
 import 'package:shared_sql/model/Task.dart';
 
 class DBHelper {
-   Database database;
-  static final String dbName = '/toDoDb.db';
-  static final String tableName = 'tasks';
-  static final String columnId = 'id';
-  static final String columnName = 'name';
-  static final String columnIsComplete = 'iscomplete';
+  Database database;
+  static final String dbName = '/sql.db';
+  static final String nameTable = 'tasksUser';
+  static final String idColumn = 'id';
+  static final String nameColumn = 'name';
+  static final String isCompleteColumn = 'iscomplete';
 
   Future<Database> initDataBase() async {
     if (database == null) {
@@ -24,7 +24,7 @@ class DBHelper {
       Database database = await openDatabase(path, version: 1,
           onCreate: (Database db, int version) async {
         await db.execute(
-            'CREATE TABLE $tableName ($columnId INTEGER PRIMARY KEY AUTOINCREMENT , $columnName TEXT, $columnIsComplete INTEGER)');
+            'CREATE TABLE $nameTable ($idColumn INTEGER PRIMARY KEY AUTOINCREMENT , $nameColumn TEXT, $isCompleteColumn  INTEGER)');
       });
       return database;
     } catch (e) {
@@ -32,10 +32,10 @@ class DBHelper {
     }
   }
 
-  insertTask(Task task) async {
+  insertTask(UserTask task) async {
     try {
       database = await initDataBase();
-      await database.insert(tableName, task.toJson());
+      await database.insert(nameTable, task.toJson());
     } catch (e) {
       print(e);
     }
@@ -43,33 +43,33 @@ class DBHelper {
 
   Future<List<Map>> getAllTasks() async {
     database = await initDataBase();
-    List<Map> resault = await database.query(tableName);
+    List<Map> resault = await database.query(nameTable);
     return resault;
   }
 
   Future<List<Map>> getTaskType(int isComplete) async {
     try {
       database = await initDataBase();
-      List<Map> resault = await database.query(tableName,
-          where: '$columnIsComplete=?', whereArgs: [isComplete]);
+      List<Map> resault = await database.query(nameTable,
+          where: '$isCompleteColumn=?', whereArgs: [isComplete]);
       return resault;
     } catch (e) {
       print(e);
     }
   }
 
-  updateTask(Task task) async {
-    try {
-      database = await initDataBase();
-      database.update(tableName, task.toJson(),
-          where: '$columnId=?', whereArgs: [task.id]);
-    } catch (e) {}
-  }
-
   deleteTask(int id) async {
     try {
       database = await initDataBase();
-      database.delete(tableName, where: '$columnId=?', whereArgs: [id]);
+      database.delete(nameTable, where: '$idColumn=?', whereArgs: [id]);
+    } catch (e) {}
+  }
+
+  updateTask(UserTask task) async {
+    try {
+      database = await initDataBase();
+      database.update(nameTable, task.toJson(),
+          where: '$idColumn=?', whereArgs: [task.id]);
     } catch (e) {}
   }
 }

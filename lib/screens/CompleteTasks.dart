@@ -31,70 +31,78 @@ class _CompleteTasksScreenState extends State<CompleteTasksScreen> {
                       } else {
                         isComplete = false;
                       }
-                      return Container(
-                        height: 70,
-                        child: Center(
-                          child: ListTile(
-                            leading: GestureDetector(
-                              onTap: () {
-                                setState(() {
-                                  Widget cancelButton = FlatButton(
-                                    child: Text("Cancel"),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                    },
-                                  );
-                                  Widget continueButton = FlatButton(
-                                    child: Text("Yes"),
-                                    onPressed: () {
-                                      db.deleteTask(
-                                          snapshot.data[position].row[0]);
-                                      Navigator.of(context).pushAndRemoveUntil(
-                                          MaterialPageRoute(
-                                              builder: (context) => TodoPage()),
-                                          (Route<dynamic> route) => false);
-                                    },
-                                  );
-
-                                  AlertDialog alert = AlertDialog(
-                                    title: Text("Delete Task?"),
-                                    content: Text(
-                                        "Are you want to delete this Task?"),
-                                    actions: [
-                                      cancelButton,
-                                      continueButton,
-                                    ],
-                                  );
-
-                                  showDialog(
-                                    context: context,
-                                    builder: (BuildContext context) {
-                                      return alert;
-                                    },
-                                  );
-                                });
-                              },
-                              child: Icon(
-                                Icons.delete,
-                                color: Colors.pinkAccent,
-                              ),
-                            ),
-                            title: Text(snapshot.data[position].row[1]),
-                            trailing: Checkbox(
-                              activeColor: Colors.pinkAccent,                           
-                                value: isComplete,
-                                onChanged: (value) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return CircularProgressIndicator();
+                      } else {
+                        return Container(
+                          height: 70,
+                          child: Center(
+                            child: ListTile(
+                              leading: GestureDetector(
+                                onTap: () {
                                   setState(() {
-                                    db.updateTask(Task(
-                                      id: snapshot.data[position].row[0],
-                                      taskName: snapshot.data[position].row[1],
-                                      isComplete: value,
-                                    ));
+                                    Widget cancelButton = FlatButton(
+                                      child: Text("Cancel"),
+                                      onPressed: () {
+                                        Navigator.pop(context);
+                                      },
+                                    );
+                                    Widget continueButton = FlatButton(
+                                      child: Text("Yes"),
+                                      onPressed: () {
+                                        db.deleteTask(
+                                            snapshot.data[position].row[0]);
+                                        Navigator.of(context)
+                                            .pushAndRemoveUntil(
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        TodoPage()),
+                                                (Route<dynamic> route) =>
+                                                    false);
+                                      },
+                                    );
+
+                                    AlertDialog alert = AlertDialog(
+                                      title: Text("Delete Task?"),
+                                      content: Text(
+                                          "Are you want to delete this Task?"),
+                                      actions: [
+                                        cancelButton,
+                                        continueButton,
+                                      ],
+                                    );
+
+                                    showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return alert;
+                                      },
+                                    );
                                   });
-                                }),
+                                },
+                                child: Icon(
+                                  Icons.delete,
+                                  color: Colors.deepPurpleAccent,
+                                ),
+                              ),
+                              title: Text(snapshot.data[position].row[1]),
+                              trailing: Checkbox(
+                                  activeColor: Colors.deepPurpleAccent,
+                                  value: isComplete,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      db.updateTask(UserTask(
+                                        id: snapshot.data[position].row[0],
+                                        taskUser:
+                                            snapshot.data[position].row[1],
+                                        isCompleteTask: value,
+                                      ));
+                                    });
+                                  }),
+                            ),
                           ),
-                        ),
-                      );
+                        );
+                      }
                     },
                   )
                 : Center(
