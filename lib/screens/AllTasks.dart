@@ -28,7 +28,7 @@ class _AllTasksScreenState extends State<AllTasksScreen> {
                       bool isComplete = false;
                       if (snapshot.data[position].row[2] == 1) {
                         isComplete = true;
-                      } else {
+                      }else {
                         isComplete = false;
                       }
                       if (snapshot.connectionState == ConnectionState.waiting) {
