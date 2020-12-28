@@ -9,24 +9,11 @@ class TodoPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return DefaultTabController(
         length: 3,
-        child: Scaffold(
-            drawer: Drawer(),
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: Colors.deepPurpleAccent,
-              onPressed: () {
-                showModalBottomSheet(
-                    context: context,
-                    builder: (context) => NewTask(),
-                    elevation: 8.0);
-              },
-              child: Icon(Icons.add),
-            ),
+         child: Scaffold(
+              drawer: Drawer(),
             appBar: AppBar(
-              title: Text(
-                'My Tasks',
-                style: TextStyle(fontSize: 22),
-              ),
               backgroundColor: Colors.deepPurpleAccent,
+              title: Text('My App'),
               bottom: TabBar(
                 tabs: [
                   Tab(
@@ -42,12 +29,17 @@ class TodoPage extends StatelessWidget {
                 isScrollable: true,
               ),
             ),
+              floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.deepPurpleAccent,
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => NewTask()),
+                );
+              },
+              child: Icon(Icons.add),
+            ),
             body: TabBarView(
-              children: [
-                AllTasksScreen(),
-                CompleteTasksScreen(),
-                InCompleteTasksScreen()
-              ],
+              children: [AllTasksScreen(), CompleteTasksScreen(), InCompleteTasksScreen()],
             )));
   }
 }

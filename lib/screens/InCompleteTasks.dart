@@ -24,9 +24,9 @@ class _InCompleteTasksScreenState extends State<InCompleteTasksScreen> {
                 ? ListView.builder(
                     itemCount: snapshot.data.length,
                     itemBuilder: (_, int position) {
-                      final item = snapshot.data[position];
+                      final task = snapshot.data[position];
                       bool isComplete = false;
-                      if (snapshot.data[position].row[2] == 1) {
+                      if (task.row[2] == 1) {
                         isComplete = true;
                       } else {
                         isComplete = false;
@@ -41,41 +41,38 @@ class _InCompleteTasksScreenState extends State<InCompleteTasksScreen> {
                               leading: GestureDetector(
                                 onTap: () {
                                   setState(() {
-                                    Widget cancelButton = FlatButton(
-                                      child: Text("Cancel"),
+                                    Widget cancelBtn = FlatButton(
+                                      child: Text("NO"),
                                       onPressed: () {
                                         Navigator.pop(context);
                                       },
                                     );
-                                    Widget continueButton = FlatButton(
+                                    Widget continueBtn = FlatButton(
                                       child: Text("Yes"),
                                       onPressed: () {
                                         db.deleteTask(
-                                            snapshot.data[position].row[0]);
-                                        Navigator.of(context)
-                                            .pushAndRemoveUntil(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        TodoPage()),
-                                                (Route<dynamic> route) =>
-                                                    false);
+                                           task.row[0]);
+                                        Navigator.of(context).push(
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    TodoPage()));
                                       },
                                     );
 
-                                    AlertDialog alert = AlertDialog(
-                                      title: Text("Delete Task?"),
+                                    AlertDialog alertDialog = AlertDialog(
+                                      title: Text("Delete Task "),
                                       content: Text(
-                                          "Are you want to delete this Task?"),
+                                          "Do you want to delete this Task ?"),
                                       actions: [
-                                        cancelButton,
-                                        continueButton,
+                                        cancelBtn,
+                                        continueBtn,
                                       ],
                                     );
 
                                     showDialog(
                                       context: context,
                                       builder: (BuildContext context) {
-                                        return alert;
+                                        return alertDialog;
                                       },
                                     );
                                   });
@@ -85,16 +82,16 @@ class _InCompleteTasksScreenState extends State<InCompleteTasksScreen> {
                                   color: Colors.deepPurpleAccent,
                                 ),
                               ),
-                              title: Text(snapshot.data[position].row[1]),
+                              title: Text(task.row[1]),
                               trailing: Checkbox(
                                   activeColor: Colors.deepPurpleAccent,
                                   value: isComplete,
                                   onChanged: (value) {
                                     setState(() {
                                       db.updateTask(UserTask(
-                                        id: snapshot.data[position].row[0],
+                                        id: task.row[0],
                                         taskUser:
-                                            snapshot.data[position].row[1],
+                                           task.row[1],
                                         isCompleteTask: value,
                                       ));
                                     });
